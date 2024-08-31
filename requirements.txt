@@ -1,0 +1,4 @@
+Flask~=3.0.3
+flask-mongoengine-3~=1.0.9
+mongoengine~=0.29.0
+configparser~=7.1.0
