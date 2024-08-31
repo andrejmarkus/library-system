@@ -2,6 +2,7 @@ from cgitb import reset
 
 import bcrypt
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_user, login_required, logout_user
 
 from models import User
 
@@ -19,12 +20,12 @@ def login_post():
         flash("User isn't registered")
         return redirect(url_for('auth.login'))
 
-    salt = user.salt
-    hash = bcrypt.hashpw(request.form['password'].encode('utf-8'), salt)
-    result = bcrypt.checkpw(user.password, hash)
+    result = bcrypt.checkpw(request.form['password'].encode('utf-8'), user.password.encode('utf-8'))
 
     if result:
-        return redirect(url_for('/'))
+        remember = request.form.get('remember', type=bool)
+        login_user(user, remember=remember)
+        return redirect(url_for('general.index'))
 
     flash("Incorrect username or password")
     return redirect(url_for('auth.login'))
@@ -53,7 +54,13 @@ def signup_post():
         flash('Email already registered')
         return redirect(url_for('auth.signup'))
 
-    new_user = User(email=email, username=username, password=hashed_password, salt=salt)
+    new_user = User(email=email, username=username, password=hashed_password)
     new_user.save()
 
     return redirect(url_for('auth.login'))
+
+@auth.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('general.index'))

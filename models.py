@@ -1,10 +1,10 @@
 import mongoengine as me
+from flask_login import UserMixin
 
 
-class User(me.Document):
+class User(UserMixin, me.Document):
     username = me.StringField(max_length=50, required=True, unique=True)
     email = me.StringField(max_length=50, unique=True)
-    salt = me.StringField(required=True)
     password = me.StringField(max_length=256, required=True)
     role = me.StringField(max_length=50, default='user')
 

@@ -5,5 +5,9 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Hello World</h1>
+    {% if user.username %}
+    <h1>Hello {{ user.username }}</h1>
+    {% else %}
+    <h1>You need to log in. <a href="{{ url_for('auth.login') }}">Click here for log in.</a></h1>
+    {% endif %}
 {% endblock %}
