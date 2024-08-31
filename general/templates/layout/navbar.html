@@ -1,10 +1,16 @@
 <nav>
     <p>Library</p>
-    <ul>
-        <li>
-            <a href="{{ url_for('general.index') }}">Home</a>
+    <div>
+        <ul>
+            <li>
+                <a href="{{ url_for('general.index') }}">Home</a>
+            </li>
+        </ul>
+        {% if user %}
+            <p>{{ user.username }}</p>
+            <a href="{{ url_for('auth.logout') }}">Log out</a>
+        {% else %}
             <a href="{{ url_for('auth.login') }}">Log in</a>
-            <a href="{{ url_for('auth.signup') }}">Sign up</a>
-        </li>
-    </ul>
+        {% endif %}
+    </div>
 </nav>

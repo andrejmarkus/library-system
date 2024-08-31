@@ -1,5 +1,5 @@
 import bcrypt
-from flask import Flask
+from flask import Flask, redirect, url_for
 from flask_login import LoginManager
 from flask_mongoengine import MongoEngine
 from configparser import ConfigParser
@@ -33,6 +33,10 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
     return User.objects.filter(id=user_id).first()
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    return redirect(url_for('auth.login'))
 
 if __name__ == '__main__':
     app.run()
