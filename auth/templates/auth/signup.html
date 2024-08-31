@@ -1,9 +1,41 @@
 {% extends 'general/base.html' %}
 
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-    <div>
-        {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>
-    </div>
-{% endif %}
-{% endwith %}
+{% block title %}
+	Sign up
+{% endblock %}
+
+{% block body %}
+	<form method="post" action="{{ url_for("auth.signup") }}">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div>
+                    {{ messages[0] }}.
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <label for="username">
+            Username
+            <input type="text" name="username" placeholder="Username">
+        </label>
+
+        <label for="email">
+            Email
+            <input type="email" name="email" placeholder="Email">
+        </label>
+
+        <label for="password">
+            Password
+            <input type="password" name="password" placeholder="Password">
+        </label>
+
+        <label for="confirm_password">
+            Username
+            <input type="password" name="confirm_password" placeholder="Confirm password">
+        </label>
+
+        <button type="submit">
+            Sign up
+        </button>
+    </form>
+{% endblock %}
