@@ -1,8 +1,12 @@
-from datetime import datetime
-
 import mongoengine as me
 
-from models.user import User
+
+class User(me.Document):
+    username = me.StringField(max_length=50, required=True, unique=True)
+    email = me.StringField(max_length=50, unique=True)
+    salt = me.StringField(required=True)
+    password = me.StringField(max_length=50, required=True)
+    role = me.StringField(max_length=50, default='user')
 
 
 class Book(me.Document):
@@ -13,7 +17,8 @@ class Book(me.Document):
     description = me.StringField()
     genre = me.StringField(max_length=50, required=True)
 
+
 class Borrowing(me.EmbeddedDocument):
     user_id = me.ReferenceField(User)
-    from_date = me.DateTimeField(default=datetime.now())
+    from_date = me.DateTimeField()
     to_date = me.DateTimeField()

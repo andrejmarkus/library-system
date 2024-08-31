@@ -1,0 +1,9 @@
+{% extends 'general/base.html' %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div>
+        {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>
+    </div>
+{% endif %}
+{% endwith %}

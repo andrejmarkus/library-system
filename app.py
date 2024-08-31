@@ -1,10 +1,17 @@
-from flask import Flask, request, render_template, redirect
+import bcrypt
+from flask import Flask
 from flask_mongoengine import MongoEngine
 from configparser import ConfigParser
 
-from models import Book
+from admin import admin
+from auth import auth
+from general import general
 
 app = Flask(__name__)
+
+app.register_blueprint(admin, url_prefix='/admin')
+app.register_blueprint(auth)
+app.register_blueprint(general)
 
 db = MongoEngine()
 config = ConfigParser()
@@ -15,28 +22,6 @@ app.config['MONGODB_SETTINGS'] = {
     'host': config['MONGO_SETTINGS']['MONGO_DATABASE_URI']
 }
 db.init_app(app)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/admin')
-def admin():
-    books = Book.objects()
-    return render_template('admin/admin.html', books = books)
-
-@app.post('/add-book')
-def add_book():
-    book = Book(
-        title=request.form['title'],
-        author=request.form['author'],
-        publisher=request.form['publisher'],
-        year=request.form['year'],
-        genre=request.form['genre'],
-        description=request.form['description']
-    )
-    book.save()
-    return redirect('/')
 
 if __name__ == '__main__':
     app.run()
