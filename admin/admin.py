@@ -29,4 +29,14 @@ def add_book():
         description=request.form['description']
     )
     book.save()
-    return redirect(url_for('admin'))
+    return redirect(url_for('admin.admin_index'))
+
+@admin.delete('/delete-book/<book_id>')
+@login_required
+def delete_book(book_id):
+    if current_user.role != 'admin':
+        return redirect(url_for('general.index'))
+
+    book = Book.objects(id=book_id)
+    book.delete()
+    return redirect(url_for('admin.admin_index'))
