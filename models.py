@@ -17,6 +17,13 @@ class Book(me.Document):
     description = me.StringField()
     genre = me.StringField(max_length=50, required=True)
 
+    meta = { 'indexes': [
+        {
+            'fields': [ '$title', '$author' ],
+            'default_language': 'english',
+            'weights': { 'title': 2, 'author': 1 }
+        },
+    ] }
 
 class Borrowing(me.Document):
     user_id = me.ReferenceField(User)
