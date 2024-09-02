@@ -5,23 +5,32 @@ from configparser import ConfigParser
 
 from admin import admin
 from auth import auth
+from borrowing import borrowing
 from general import general
 from models import User
+from profile import profile
 
 app = Flask(__name__)
 
 app.register_blueprint(admin, url_prefix='/admin')
+app.register_blueprint(profile, url_prefix='/profile')
+app.register_blueprint(borrowing, url_prefix='/borrowing')
 app.register_blueprint(auth)
 app.register_blueprint(general)
 
-db = MongoEngine()
 config = ConfigParser()
 config.read('config.ini')
+
+# DATABASE SETTINGS
+db = MongoEngine()
 app.config['MONGODB_SETTINGS'] = {
     'db': config['MONGO_SETTINGS']['MONGO_DATABASE_NAME'],
     'host': config['MONGO_SETTINGS']['MONGO_DATABASE_URI']
 }
-app.config['SECRET_KEY'] = config['FLASK_SETTINGS']['SECRET_KEY']
+
+# FLASK SETTINGS
+app.config['SECRET_KEY'] = config['FLASK_SETTINGS']['FLASK_SECRET_KEY']
+app.config['UPLOAD_FOLDER'] = config['FLASK_SETTINGS']['FLASK_UPLOAD_FOLDER']
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'

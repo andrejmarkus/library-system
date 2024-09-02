@@ -12,9 +12,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            }).then(_ =>
-                document.getElementById(`book-${bookId}`).remove()
-            )
+            }).then(response => document.getElementById(`book-${bookId}`).remove())
         }
     </script>
 {% endblock %}

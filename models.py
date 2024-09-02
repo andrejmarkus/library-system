@@ -6,7 +6,14 @@ class User(UserMixin, me.Document):
     username = me.StringField(max_length=50, required=True, unique=True)
     email = me.StringField(max_length=50, unique=True)
     password = me.StringField(max_length=256, required=True)
+    profile_picture = me.StringField(max_length=100)
     role = me.StringField(max_length=50, default='user')
+
+
+class Borrowing(me.EmbeddedDocument):
+    user_id = me.ReferenceField(User)
+    from_date = me.DateTimeField()
+    to_date = me.DateTimeField()
 
 
 class Book(me.Document):
@@ -16,6 +23,7 @@ class Book(me.Document):
     year = me.IntField(required=True)
     description = me.StringField()
     genre = me.StringField(max_length=50, required=True)
+    borrowing = me.EmbeddedDocumentField(Borrowing, default=None)
 
     meta = { 'indexes': [
         {
@@ -24,9 +32,3 @@ class Book(me.Document):
             'weights': { 'title': 2, 'author': 1 }
         },
     ] }
-
-class Borrowing(me.Document):
-    user_id = me.ReferenceField(User)
-    book_id = me.ReferenceField(Book)
-    from_date = me.DateTimeField()
-    to_date = me.DateTimeField()
