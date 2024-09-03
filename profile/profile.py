@@ -9,7 +9,7 @@ from utils import is_file_allowed, file_extension
 
 profile = Blueprint('profile', __name__, template_folder='templates', static_folder='static')
 
-@profile.route('/', methods=['GET', 'PUT'])
+@profile.route('/')
 @login_required
 def profile_index():
     books = Book.objects(borrowing__user_id=current_user.id)

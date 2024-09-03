@@ -5,7 +5,6 @@ from configparser import ConfigParser
 
 from admin import admin
 from auth import auth
-from borrowing import borrowing
 from general import general
 from models import User
 from profile import profile
@@ -14,7 +13,6 @@ app = Flask(__name__)
 
 app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(profile, url_prefix='/profile')
-app.register_blueprint(borrowing, url_prefix='/borrowing')
 app.register_blueprint(auth)
 app.register_blueprint(general)
 

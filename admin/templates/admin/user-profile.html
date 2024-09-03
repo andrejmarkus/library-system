@@ -1,7 +1,8 @@
 {% extends 'general/base.html' %}
+{% from 'general/BookCard.html' import BookCard %}
 
 {% block title %}
-	Your Profile
+    {{ display_user.username }} Profile
 {% endblock %}
 
 {% block body %}
@@ -13,24 +14,33 @@
         {% endif %}
     {% endwith %}
 
-    <div>
-        <img style="width: 10rem; aspect-ratio: 1; border-radius: 100%;" src="{{ url_for('profile.load_user_image', user_id=display_user.id, filename = display_user.profile_picture) }}" alt="{{ display_user.username }}-profile">
-        <p>{{ display_user.username }}</p>
+    <div class="level">
+        <div class="level-left">
+            <div class="level-item" style="width: 7rem">
+                <figure class="image is-square">
+                    <img class="is-rounded" src="{{ url_for('profile.load_user_image', user_id=display_user.id, filename=display_user.profile_picture) }}" alt="{{ display_user.username }}-profile">
+                </figure>
+            </div>
+            <p class="level-item title is-3">{{ display_user.username }}</p>
+        </div>
     </div>
 
-    <h3>Your current borrowings</h3>
+    <h3 class="title is-3">Your current borrowings</h3>
 
-    <div class="grid mt-4">
-        {% for book in books %}
-            <div class="cell" id="book-{{ book.id }}">
-                {% call BookCard(book) %}
-                    <form class="card-footer-item" method="post" action="{{ url_for('borrowing.borrow_return', username=display_user.username, book_id=book.id) }}">
-                        <div class="field">
-                            <button class="button is-primary" type="submit">Return</button>
-                        </div>
-                    </form>
-                {% endcall %}
-            </div>
-        {% endfor %}
+    <div class="fixed-grid has-4-cols mt-4">
+        <div class="grid">
+            {% for book in books %}
+                <div class="cell" id="book-{{ book.id }}">
+                    {% set caller_ = caller %}
+                    {% call BookCard(book) %}
+                        <form class="card-footer-item" method="post" action="{{ url_for('general.borrow_return', username=display_user.username, book_id=book.id) }}">
+                            <div class="field">
+                                <button class="button is-primary" type="submit">Return</button>
+                            </div>
+                        </form>
+                    {% endcall %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

@@ -2,7 +2,7 @@
 {% from 'general/BookCard.html' import BookCard %}
 
 {% block title %}
-	Your Profile
+    Your profile
 {% endblock %}
 
 {% block body %}
@@ -14,18 +14,27 @@
         {% endif %}
     {% endwith %}
 
-    <div>
-        <img style="width: 10rem; aspect-ratio: 1; border-radius: 100%;" src="{{ url_for('profile.load_user_image', user_id=user.id, filename=user.profile_picture) }}" alt="{{ user.username }}-profile">
-        <p>{{ user.username }}</p>
+    <div class="level">
+        <div class="level-left">
+            <div class="level-item" style="width: 7rem">
+                <figure class="image is-square">
+                    <img class="is-rounded" src="{{ url_for('profile.load_user_image', user_id=user.id, filename=user.profile_picture) }}" alt="{{ user.username }}-profile">
+                </figure>
+            </div>
+            <p class="level-item title is-3">{{ user.username }}</p>
+        </div>
     </div>
 
     <h3 class="title is-3">Your current borrowings</h3>
 
-    <div class="grid mt-4">
-        {% for book in books %}
-            <div class="cell" id="book-{{ book.id }}">
-                {% call BookCard(book) %}{% endcall %}
-            </div>
-        {% endfor %}
+    <div class="fixed-grid has-4-cols mt-4">
+        <div class="grid">
+            {% for book in books %}
+                <div class="cell" id="book-{{ book.id }}">
+                    {% set caller_ = caller %}
+                    {% call BookCard(book) %}{% endcall %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

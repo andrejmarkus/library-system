@@ -18,7 +18,7 @@ def admin_index():
     books = Book.objects()
     return render_template('admin/admin.html', books=books)
 
-@admin.route('/user/<username>')
+@admin.route('/profile/<username>')
 @login_required
 def user_profile(username):
     if current_user.role != 'admin':

@@ -25,7 +25,7 @@
     <div class="fixed-grid has-4-cols mt-4">
         <div class="grid">
             {% for book in books %}
-                <div id="book-{{ book.id }}">
+                <div class="cell" id="book-{{ book.id }}">
                     {% call BookCard(book) %}{% endcall %}
                 </div>
             {% endfor %}

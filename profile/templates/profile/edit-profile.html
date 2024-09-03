@@ -20,5 +20,5 @@
         </button>
     </form>
     
-    <img style="width: 10rem; aspect-ratio: 1;" src="{{ url_for('profile.load', user_id=user.id, filename = user.profile_picture) }}" alt="{{ user.username }}-profile">
+    <img style="width: 10rem; aspect-ratio: 1;" src="{{ url_for('profile.load_user_image', user_id=user.id, filename = user.profile_picture) }}" alt="{{ user.username }}-profile">
 {% endblock %}
