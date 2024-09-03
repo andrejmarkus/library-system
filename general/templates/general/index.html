@@ -38,9 +38,21 @@
                         </div>
                     </header>
 
-                    <div class="card-content">
-                        <p>{{ book.description }}</p>
+                    <div class="card-image">
+                        <figure class="image">
+                            {% if book.book_picture %}
+                                <figure class="image">
+                                    <img src="{{ url_for('general.load_book_image', book_id=book.id, filename=book.book_picture) }}">
+                                </figure>
+                            {% endif %}
+                        </figure>
                     </div>
+
+                    {% if book.description %}
+                        <div class="card-content">
+                            <p>{{ book.description }}</p>
+                        </div>
+                    {% endif %}
 
                     <footer class="card-footer">
                         {% if user.is_authenticated %}

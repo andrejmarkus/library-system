@@ -1,6 +1,6 @@
 import os
 
-from flask import Blueprint, request, render_template, flash, redirect, url_for, send_from_directory
+from flask import Blueprint, request, render_template, flash, redirect, url_for, send_from_directory, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
@@ -28,15 +28,17 @@ def upload():
         flash('File not allowed', 'danger')
         return redirect(url_for('profile.edit_profile'))
     filename = secure_filename(f'{current_user.id}{file_extension(file.filename)}')
-    file.save(os.path.join('static/', filename))
+    path = os.path.join(f'{current_app.config['UPLOAD_FOLDER']}users/{current_user.id}/', filename)
+
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    file.save(path)
 
     User.objects(id=current_user.id).update(profile_picture=filename)
 
     return redirect(url_for('profile.edit_profile'))
 
 
-@profile.get('/load/<filename>')
-@login_required
-def load(filename):
-    return send_from_directory('static/', filename)
+@profile.get('/load/<user_id>/<filename>')
+def load_user_image(user_id, filename):
+    return send_from_directory(f'{current_app.config['UPLOAD_FOLDER']}users/{user_id}/', filename)
 

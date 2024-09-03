@@ -24,6 +24,7 @@ class Book(me.Document):
     description = me.StringField()
     genre = me.StringField(max_length=50, required=True)
     borrowing = me.EmbeddedDocumentField(Borrowing, default=None)
+    book_picture = me.StringField(max_length=100)
 
     meta = { 'indexes': [
         {

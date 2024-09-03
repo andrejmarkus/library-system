@@ -14,7 +14,7 @@
     {% endwith %}
 
     <div>
-        <img style="width: 10rem; aspect-ratio: 1; border-radius: 100%;" src="{{ url_for('profile.load', filename = display_user.profile_picture) }}" alt="{{ display_user.username }}-profile">
+        <img style="width: 10rem; aspect-ratio: 1; border-radius: 100%;" src="{{ url_for('profile.load_user_image', user_id=display_user.id, filename = display_user.profile_picture) }}" alt="{{ display_user.username }}-profile">
         <p>{{ display_user.username }}</p>
     </div>
 

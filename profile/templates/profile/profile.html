@@ -14,22 +14,46 @@
     {% endwith %}
 
     <div>
-        <img style="width: 10rem; aspect-ratio: 1; border-radius: 100%;" src="{{ url_for('profile.load', filename=user.profile_picture) }}" alt="{{ user.username }}-profile">
+        <img style="width: 10rem; aspect-ratio: 1; border-radius: 100%;" src="{{ url_for('profile.load_user_image', user_id=user.id, filename=user.profile_picture) }}" alt="{{ user.username }}-profile">
         <p>{{ user.username }}</p>
     </div>
 
-    <h3>Your current borrowings</h3>
+    <h3 class="title is-3">Your current borrowings</h3>
 
-    {% for book in books %}
-        <div id="book-{{ book.id }}">
-            <p>Title: {{ book.title }}</p>
-            <p>Author: {{ book.author }}</p>
-            <p>Publisher: {{ book.publisher }}</p>
-            <p>Year: {{ book.year }}</p>
-            <p>Genre: {{ book.genre }}</p>
-            <p>Description: {{ book.description }}</p>
+    <div class="grid mt-4">
+        {% for book in books %}
+            <div class="cell" id="book-{{ book.id }}">
+                <div class="card">
+                    <header class="card-header">
+                        <div class="card-header-title">
+                            <div class="content">
+                                <p class="title is-5">{{ book.title }}</p>
+                                <p class="subtitle is-6 mt-0">
+                                    by {{ book.author }}
+                                    <br>
+                                    {{ book.genre }}
+                                </p>
+                            </div>
+                        </div>
+                    </header>
 
-            {% block return %}{% endblock %}
-        </div>
-    {% endfor %}
+                    <div class="card-image">
+                        <figure class="image">
+                            {% if book.book_picture %}
+                                <figure class="image">
+                                    <img src="{{ url_for('general.load_book_image', book_id=book.id, filename=book.book_picture) }}">
+                                </figure>
+                            {% endif %}
+                        </figure>
+                    </div>
+
+                    {% if book.description %}
+                        <div class="card-content">
+                            <p>{{ book.description }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

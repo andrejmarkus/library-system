@@ -1,6 +1,5 @@
-from flask import render_template, Blueprint, request
+from flask import render_template, Blueprint, request, send_from_directory, current_app
 
-from borrowing import borrowing
 from models import Book
 
 general = Blueprint('general', __name__, template_folder='templates', static_folder='static')
@@ -14,3 +13,7 @@ def index():
 def search():
     books = Book.objects().search_text(request.args['value']).order_by('$text_score')
     return render_template('general/index.html', books=books)
+
+@general.get('/load/<book_id>/<filename>')
+def load_book_image(book_id, filename):
+    return send_from_directory(f'{current_app.config['UPLOAD_FOLDER']}books/{book_id}/', filename)
