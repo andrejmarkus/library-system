@@ -1,17 +1,32 @@
-<nav>
-    <p>Library</p>
-    <div>
-        <ul>
-            <li>
-                <a href="{{ url_for('general.index') }}">Home</a>
-            </li>
-        </ul>
+<nav class="navbar">
+    <div class="navbar-brand">
+        <a href="{{ url_for('general.index') }}" class="navbar-item">Library</a>
+    </div>
+
+    <div class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="{{ url_for('general.index') }}">Home</a>
+        </div>
+    </div>
+
+    <div class="navbar-end">
         {% if user.is_authenticated %}
-            <img style="width: 3rem; aspect-ratio: 1; border-radius: 100%;" src="{{ url_for('profile.load', filename = user.profile_picture) }}" alt="{{ user.username }}-profile">
-            <p>{{ user.username }}</p>
-            <a href="{{ url_for('auth.logout') }}">Log out</a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                    <img class="image" style="aspect-ratio: 1; border-radius: 100%;" src="{{ url_for('profile.load', filename = user.profile_picture) }}" alt="{{ user.username }}-profile">
+                    <p>{{ user.username }}</p>
+                </a>
+                <div class="navbar-dropdown">
+                    <a href="{{ url_for('profile.profile_index') }}" class="navbar-item">Profile</a>
+                    <div class="navbar-item">
+                        <a class="button is-primary" href="{{ url_for('auth.logout') }}">Log out</a>
+                    </div>
+                </div>
+            </div>
         {% else %}
-            <a href="{{ url_for('auth.login') }}">Log in</a>
+            <div class="navbar-item">
+                <a class="button is-primary" href="{{ url_for('auth.login') }}">Log in</a>
+            </div>
         {% endif %}
     </div>
 </nav>
