@@ -1,4 +1,5 @@
 {% extends 'general/base.html' %}
+{% from 'general/BookCard.html' import BookCard %}
 
 {% block title %}
 	Home
@@ -21,50 +22,13 @@
         </div>
     </form>
 
-    <div class="grid mt-4">
-        {% for book in books %}
-            <div class="cell" id="book-{{ book.id }}">
-                <div class="card">
-                    <header class="card-header">
-                        <div class="card-header-title">
-                            <div class="content">
-                                <p class="title is-5">{{ book.title }}</p>
-                                <p class="subtitle is-6 mt-0">
-                                    by {{ book.author }}
-                                    <br>
-                                    {{ book.genre }}
-                                </p>
-                            </div>
-                        </div>
-                    </header>
-
-                    <div class="card-image">
-                        <figure class="image">
-                            {% if book.book_picture %}
-                                <figure class="image">
-                                    <img src="{{ url_for('general.load_book_image', book_id=book.id, filename=book.book_picture) }}">
-                                </figure>
-                            {% endif %}
-                        </figure>
-                    </div>
-
-                    {% if book.description %}
-                        <div class="card-content">
-                            <p>{{ book.description }}</p>
-                        </div>
-                    {% endif %}
-
-                    <footer class="card-footer">
-                        {% if user.is_authenticated %}
-                            <form class="card-footer-item" method="get" action="{{ url_for('borrowing.borrowing_index', book_id = book.id) }}">
-                                <div class="field">
-                                    <button class="button is-primary" type="submit">Borrow</button>
-                                </div>
-                            </form>
-                        {% endif %}
-                    </footer>
+    <div class="fixed-grid has-4-cols mt-4">
+        <div class="grid">
+            {% for book in books %}
+                <div id="book-{{ book.id }}">
+                    {% call BookCard(book) %}{% endcall %}
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

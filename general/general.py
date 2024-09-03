@@ -17,3 +17,8 @@ def search():
 @general.get('/load/<book_id>/<filename>')
 def load_book_image(book_id, filename):
     return send_from_directory(f'{current_app.config['UPLOAD_FOLDER']}books/{book_id}/', filename)
+
+@general.get('/detail/<book_id>')
+def detail_book(book_id):
+    book = Book.objects(id=book_id)
+    return render_template('general/detail.html', book=book)

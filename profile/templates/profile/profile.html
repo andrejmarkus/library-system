@@ -1,4 +1,5 @@
 {% extends 'general/base.html' %}
+{% from 'general/BookCard.html' import BookCard %}
 
 {% block title %}
 	Your Profile
@@ -23,36 +24,7 @@
     <div class="grid mt-4">
         {% for book in books %}
             <div class="cell" id="book-{{ book.id }}">
-                <div class="card">
-                    <header class="card-header">
-                        <div class="card-header-title">
-                            <div class="content">
-                                <p class="title is-5">{{ book.title }}</p>
-                                <p class="subtitle is-6 mt-0">
-                                    by {{ book.author }}
-                                    <br>
-                                    {{ book.genre }}
-                                </p>
-                            </div>
-                        </div>
-                    </header>
-
-                    <div class="card-image">
-                        <figure class="image">
-                            {% if book.book_picture %}
-                                <figure class="image">
-                                    <img src="{{ url_for('general.load_book_image', book_id=book.id, filename=book.book_picture) }}">
-                                </figure>
-                            {% endif %}
-                        </figure>
-                    </div>
-
-                    {% if book.description %}
-                        <div class="card-content">
-                            <p>{{ book.description }}</p>
-                        </div>
-                    {% endif %}
-                </div>
+                {% call BookCard(book) %}{% endcall %}
             </div>
         {% endfor %}
     </div>

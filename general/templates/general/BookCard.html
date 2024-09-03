@@ -1,0 +1,40 @@
+{% macro BookCard(book) %}
+    <form method="get" action="{{ url_for('general.detail_book', book_id=book.id) }}">
+        <button type="submit">
+            <div class="card">
+                <header class="card-header">
+                    <div class="card-header-title">
+                        <div class="content">
+                            <p class="title is-5">{{ book.title }}</p>
+                            <p class="subtitle is-6 mt-0">
+                                by {{ book.author }}
+                                <br>
+                                {{ book.genre }}
+                            </p>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="card-image">
+                    <figure class="image">
+                        {% if book.book_picture %}
+                            <figure class="image">
+                                <img src="{{ url_for('general.load_book_image', book_id=book.id, filename=book.book_picture) }}">
+                            </figure>
+                        {% endif %}
+                    </figure>
+                </div>
+
+                {% if book.description %}
+                    <div style="height: 6rem; overflow: clip" class="card-content">
+                        <p>{{ book.description }}</p>
+                    </div>
+                {% endif %}
+
+                <footer class="card-footer">
+                    {{ caller() }}
+                </footer>
+            </div>
+        </button>
+    </form>
+{% endmacro %}
