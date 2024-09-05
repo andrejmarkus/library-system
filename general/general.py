@@ -1,7 +1,7 @@
 from flask import render_template, Blueprint, request, send_from_directory, current_app, redirect, url_for
 from flask_login import login_required, current_user
 
-from models import Book, Borrowing
+from models import Book, Borrowing, User
 
 general = Blueprint('general', __name__, template_folder='templates', static_folder='static')
 
@@ -27,20 +27,26 @@ def detail_book(book_id):
 @general.post('/borrow/<book_id>')
 @login_required
 def borrow(book_id):
+    if current_user.role != 'admin':
+        return redirect(url_for('general.index'))
+
+    username = request.form['username']
     from_date = request.form['from_date']
     to_date = request.form['to_date']
 
-    borrowing = Borrowing(user_id=current_user.id, from_date=from_date, to_date=to_date)
+    user = User.objects(username=username).first()
+    borrowing = Borrowing(user_id=user.id, from_date=from_date, to_date=to_date)
     Book.objects(id=book_id).update(borrowing=borrowing)
 
-    return redirect(url_for('profile.profile_index'))
+    return redirect(url_for('admin.user_profile', username=username))
 
-@general.post('/return/<username>/<book_id>')
+@general.post('/return/<user_id>/<book_id>')
 @login_required
-def borrow_return(username, book_id):
+def borrow_return(user_id, book_id):
     if current_user.role != 'admin':
-        return redirect(url_for('profile.profile_index'))
+        return redirect(url_for('general.index'))
 
+    user = User.objects(id=user_id).first()
     Book.objects(id=book_id).update(unset__borrowing=True)
 
-    return redirect(url_for('admin.user_profile', username=username))
+    return redirect(url_for('admin.user_profile', username=user.username))

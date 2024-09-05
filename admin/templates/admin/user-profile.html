@@ -33,7 +33,7 @@
                 <div class="cell" id="book-{{ book.id }}">
                     {% set caller_ = caller %}
                     {% call BookCard(book) %}
-                        <form class="card-footer-item" method="post" action="{{ url_for('general.borrow_return', username=display_user.username, book_id=book.id) }}">
+                        <form class="card-footer-item" method="post" action="{{ url_for('general.borrow_return', user_id=display_user.id, book_id=book.id) }}">
                             <div class="field">
                                 <button class="button is-primary" type="submit">Return</button>
                             </div>

@@ -29,7 +29,7 @@
     </div>
 
     <script>
-        const getBookDetail = () => {
+        const getBookDetail{{ book.id }} = () => {
             fetch(`detail/{{ book.id }}`, {
                 method: "GET",
                 headers: {
@@ -40,11 +40,15 @@
         }
 
         document.getElementById("book-header-{{ book.id }}").addEventListener("click", (event) => {
-            getBookDetail()
+            getBookDetail{{ book.id }}()
         })
 
         document.getElementById("book-image-{{ book.id }}").addEventListener("click", (event) => {
-            getBookDetail()
+            getBookDetail{{ book.id }}()
         })
     </script>
+{% endmacro %}
+
+{% macro BookCardScript(book) %}
+
 {% endmacro %}

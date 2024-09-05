@@ -31,7 +31,6 @@
         <div class="grid">
             {% for book in books %}
                 <div class="cell" id="book-{{ book.id }}">
-                    {% set caller_ = caller %}
                     {% call BookCard(book) %}{% endcall %}
                 </div>
             {% endfor %}

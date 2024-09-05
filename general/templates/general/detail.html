@@ -30,10 +30,17 @@
                         <p><b>Genre:</b> {{ book.genre }}</p>
                         <p><b>Description:</b><br> {{ book.description }}</p>
 
-                        {% if user.is_authenticated %}
+                        {% if user.is_authenticated and user.role == "admin" %}
                             <h4 class="title is-4">Book is available for borrowing</h4>
 
-                            <form method="post" action="{{ url_for('general.borrow', book_id=book.id) }}">
+                            <form method="post" action="{{ url_for("general.borrow", book_id=book.id) }}">
+                                <div class="field">
+                                    <label class="label" for="username">Username</label>
+                                    <div class="control">
+                                        <input class="input" type="text" name="username">
+                                    </div>
+                                </div>
+
                                 <div class="field">
                                     <label class="label" for="from_date">From</label>
                                     <div class="control">
