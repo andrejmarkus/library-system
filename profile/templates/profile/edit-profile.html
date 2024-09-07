@@ -13,12 +13,51 @@
         {% endif %}
     {% endwith %}
 
+    <h3 class="title is-3">Profile Settings</h3>
+
     <form method="post" action="{{ url_for('profile.upload') }}" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <button type="submit" value="Upload">
-            Upload
-        </button>
+        <div class="field">
+            <label class="label" for="file">Profile Picture</label>
+            <input class="input" type="file" name="file">
+        </div>
+
+        <img style="width: 10rem; aspect-ratio: 1;" src="{{ url_for('profile.load_user_image', user_id=user.id, filename = user.profile_picture) }}" alt="{{ user.username }}-profile">
+
+        <div class="field">
+            <button class="button is-primary" type="submit" value="Upload">
+                Upload
+            </button>
+        </div>
     </form>
-    
-    <img style="width: 10rem; aspect-ratio: 1;" src="{{ url_for('profile.load_user_image', user_id=user.id, filename = user.profile_picture) }}" alt="{{ user.username }}-profile">
+
+    <form method="post" action="{{ url_for('profile.update_username') }}">
+        <div class="field">
+            <label class="label" for="username">Username</label>
+            <input class="input" type="text" name="username">
+        </div>
+
+        <div class="field">
+            <button class="button is-primary" type="submit" value="Upload">
+                Change username
+            </button>
+        </div>
+    </form>
+
+    <form method="post" action="{{ url_for('profile.update_password') }}">
+        <div class="field">
+            <label class="label" for="new_password">New Password</label>
+            <input class="input" type="password" name="new_password">
+        </div>
+
+        <div class="field">
+            <label class="label" for="old_password">Old Password</label>
+            <input class="input" type="password" name="old_password">
+        </div>
+
+        <div class="field">
+            <button class="button is-primary" type="submit" value="Upload">
+                Change Password
+            </button>
+        </div>
+    </form>
 {% endblock %}

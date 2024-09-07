@@ -1,5 +1,6 @@
 import os
 
+import bcrypt
 from flask import Blueprint, request, render_template, flash, redirect, url_for, send_from_directory, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
@@ -15,9 +16,9 @@ def profile_index():
     books = Book.objects(borrowing__user_id=current_user.id)
     return render_template('profile/profile.html', books=books)
 
-@profile.route('/edit-profile')
+@profile.route('/settings')
 @login_required
-def edit_profile():
+def profile_settings():
     return render_template('profile/edit-profile.html')
 
 @profile.post('/upload')
@@ -35,8 +36,33 @@ def upload():
 
     User.objects(id=current_user.id).update(profile_picture=filename)
 
-    return redirect(url_for('profile.edit_profile'))
+    return redirect(url_for('profile.profile-settings'))
 
+@profile.post('/update-username')
+@login_required
+def update_username():
+    username = request.form['username']
+    User.objects(id=current_user.id).update(username=username)
+
+    return redirect(url_for('profile.profile-settings'))
+
+@profile.post('/update-password')
+@login_required
+def update_password():
+    new_password = request.form['new_password']
+    old_password = request.form['old_password']
+
+    result = bcrypt.checkpw(old_password.encode('utf-8'), current_user.password.encode('utf-8'))
+
+    if result:
+        salt = bcrypt.gensalt()
+        hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), salt)
+
+        User.objects(id=current_user.id).update(password=hashed_password)
+        return redirect(url_for('profile.profile-settings'))
+
+    flash("Invalid password")
+    return redirect(url_for('profile.profile-settings'))
 
 @profile.get('/load/<user_id>/<filename>')
 def load_user_image(user_id, filename):
