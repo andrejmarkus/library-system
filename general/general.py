@@ -22,7 +22,8 @@ def load_book_image(book_id, filename):
 @general.get('/detail/<book_id>')
 def detail_book(book_id):
     book = Book.objects(id=book_id).first()
-    return render_template('general/detail.html', book=book)
+    users = User.objects()
+    return render_template('general/detail.html', book=book, users=users)
 
 @general.post('/borrow/<book_id>')
 @login_required
@@ -30,15 +31,15 @@ def borrow(book_id):
     if current_user.role != 'admin':
         return redirect(url_for('general.index'))
 
-    username = request.form['username']
+    user_id = request.form['user_id']
     from_date = request.form['from_date']
     to_date = request.form['to_date']
 
-    user = User.objects(username=username).first()
+    user = User.objects(id=user_id).first()
     borrowing = Borrowing(user_id=user.id, from_date=from_date, to_date=to_date)
     Book.objects(id=book_id).update(borrowing=borrowing)
 
-    return redirect(url_for('admin.user_profile', username=username))
+    return redirect(url_for('admin.user_profile', username=user.username))
 
 @general.post('/return/<user_id>/<book_id>')
 @login_required

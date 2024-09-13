@@ -15,7 +15,7 @@ def users():
     if current_user.role != 'admin':
         return redirect(url_for('general.index'))
 
-    users = User.objects().order_by('+role', '+username')
+    users = User.objects(id__ne=current_user.id).order_by('+role', '+username')
     return render_template('admin/users.html', users=users)
 
 @admin.route('/books')
