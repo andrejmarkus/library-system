@@ -27,13 +27,11 @@
 
     <h3 class="title is-3">Your current borrowings</h3>
 
-    <div class="fixed-grid has-4-cols mt-4">
-        <div class="grid">
-            {% for book in books %}
-                <div class="cell" id="book-{{ book.id }}">
-                    {% call BookCard(book) %}{% endcall %}
-                </div>
-            {% endfor %}
-        </div>
+    <div class="grid mt-4">
+        {% for book in books %}
+            <div class="cell" id="book-{{ book.id }}">
+                {% call BookCard(book) %}{% endcall %}
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'general/admin-base.html' %}
+
+{% block title %}
+	Manage Users
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+    <h3 class="title is-3">Manage Users</h3>
+
+    {% for user in users %}
+        <div id="user-{{ user.id }}" class="box">
+            <div class="is-flex is-justify-content-space-between is-align-items-center">
+                <div class="is-flex is-align-items-center is-gap-1">
+                    {% if user.profile_picture %}
+                        <figure class="image is-32x32">
+                            <img class="is-rounded" style="aspect-ratio: 1;" src="{{ url_for('profile.load_user_image', user_id=user.id, filename = user.profile_picture) }}" alt="{{ user.username }}-profile">
+                        </figure>
+                    {% endif %}
+                    <p>{{ user.username }}</p>
+                </div>
+                <div class="is-flex is-align-items-center is-gap-2">
+                    <div class="select">
+                        <select id="user-select-{{ user.id }}" name="role">
+                            <option value="admin" {{ "selected='selected'" if user.role == "admin" }}>Admin</option>
+                            <option value="user" {{ "selected='selected'" if user.role == "user" }}>User</option>
+                        </select>
+                    </div>
+                    <button id="user-delete-{{ user.id }}" class="delete"></button>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <script>
+        {% for user in users %}
+            document.getElementById("user-select-{{ user.id }}").addEventListener("change", (event) => {
+                event.preventDefault()
+
+                fetch("{{ url_for("admin.change_role", user_id = user.id) }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ role: event.target.value })
+                })
+            })
+
+            document.getElementById("user-delete-{{ user.id }}").addEventListener("click", (event) => {
+                fetch("{{ url_for("admin.delete_user", user_id = user.id) }}", {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => document.getElementById("user-{{ user.id }}").remove())
+            })
+        {% endfor %}
+    </script>
+{% endblock %}

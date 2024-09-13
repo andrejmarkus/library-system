@@ -9,14 +9,23 @@ from utils import is_file_allowed, file_extension
 
 admin = Blueprint('admin', __name__, template_folder='templates', static_folder='static')
 
-@admin.route('/')
+@admin.route('/users')
 @login_required
-def admin_index():
+def users():
+    if current_user.role != 'admin':
+        return redirect(url_for('general.index'))
+
+    users = User.objects().order_by('+role', '+username')
+    return render_template('admin/users.html', users=users)
+
+@admin.route('/books')
+@login_required
+def books():
     if current_user.role != 'admin':
         return redirect(url_for('general.index'))
 
     books = Book.objects()
-    return render_template('admin/admin.html', books=books)
+    return render_template('admin/books.html', books=books)
 
 @admin.route('/profile/<username>')
 @login_required
@@ -29,7 +38,27 @@ def user_profile(username):
 
     return render_template('admin/user-profile.html', display_user=user, books=books)
 
-@admin.post('/add-book')
+@admin.delete('/users/delete')
+@login_required
+def delete_user(user_id):
+    if current_user.role != 'admin':
+        return redirect(url_for('general.index'))
+
+    User.objects(id=user_id).delete()
+    return redirect(url_for('admin.users'))
+
+@admin.post('/users/role/<user_id>')
+@login_required
+def change_role(user_id):
+    if current_user.role != 'admin':
+        return redirect(url_for('general.index'))
+
+    role = request.json['role']
+
+    User.objects(id=user_id).update(role=role)
+    return redirect(url_for('admin.users'))
+
+@admin.post('/books/add')
 @login_required
 def add_book():
     if current_user.role != 'admin':
@@ -62,15 +91,13 @@ def add_book():
 
     book.update(book_picture=filename)
 
-    return redirect(url_for('admin.admin_index'))
+    return redirect(url_for('admin.books'))
 
-@admin.delete('/delete-book/<book_id>')
+@admin.delete('/books/delete/<book_id>')
 @login_required
 def delete_book(book_id):
     if current_user.role != 'admin':
         return redirect(url_for('general.index'))
 
-    book = Book.objects(id=book_id)
-    book.delete()
-
-    return redirect(url_for('admin.admin_index'))
+    Book.objects(id=book_id).delete()
+    return redirect(url_for('admin.books'))

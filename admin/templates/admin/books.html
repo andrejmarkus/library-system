@@ -2,20 +2,10 @@
 {% from 'general/BookCard.html' import BookCard %}
 
 {% block title %}
-	Admin
+	Manage Books
 {% endblock %}
 
 {% block head %}
-	<script>
-        function deleteBook(bookId) {
-            fetch(`/admin/delete-book/${bookId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => document.getElementById(`book-${bookId}`).remove())
-        }
-    </script>
 {% endblock %}
 
 {% block body %}
@@ -137,29 +127,38 @@
 
     <h3 class="title is-3 mt-4">Manage books</h3>
 
-    <div class="fixed-grid has-4-cols mt-4">
-        <div class="grid">
-            {% for book in books %}
-                <div class="cell" id="book-{{ book.id }}">
-                    {% call BookCard(book) %}
-                        {% if user.is_authenticated %}
-                            <div class="card-footer-item">
-                                <div class="field">
-                                    <button class="button is-danger" onclick="deleteBook('{{ book.id }}')">Delete</button>
-                                </div>
+    <div class="grid mt-4">
+        {% for book in books %}
+            <div class="cell" id="book-{{ book.id }}">
+                {% call BookCard(book) %}
+                    {% if user.is_authenticated %}
+                        <div class="card-footer-item">
+                            <div class="field">
+                                <button id="book-delete-{{ book.id }}" class="button is-danger" onclick="deleteBook('{{ book.id }}')">Delete</button>
                             </div>
-                        {% endif %}
-                    {% endcall %}
-                </div>
-            {% endfor %}
-        </div>
+                        </div>
+                    {% endif %}
+                {% endcall %}
+            </div>
+        {% endfor %}
     </div>
 
     <script>
-        document.getElementById('file-input').addEventListener('change', (event) => {
+        document.getElementById("file-input").addEventListener("change", (event) => {
             if (event.target.files[0]) {
-                document.getElementById('file-name').innerHTML = event.target.files[0].name
+                document.getElementById("file-name").innerHTML = event.target.files[0].name
             }
         })
+
+        {% for book in books %}
+            document.getElementById("book-delete-{{ book.id }}").addEventListener("click", (event) => {
+                fetch("{{ url_for("admin.delete_book", book_id = book.id) }}", {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then(response => document.getElementById("book-{{ book.id }}").remove())
+            })
+        {% endfor %}
     </script>
 {% endblock %}

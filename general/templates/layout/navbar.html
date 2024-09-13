@@ -3,12 +3,6 @@
         <a href="{{ url_for('general.index') }}" class="navbar-item">Library</a>
     </div>
 
-    <div class="navbar-menu">
-        <div class="navbar-start">
-            <a class="navbar-item" href="{{ url_for('general.index') }}">Home</a>
-        </div>
-    </div>
-
     <div class="navbar-end">
         {% if user.is_authenticated %}
             <div class="navbar-item has-dropdown is-hoverable">
@@ -22,7 +16,7 @@
                 </a>
                 <div class="navbar-dropdown">
                     {% if user.role == "admin" %}
-                        <a href="{{ url_for('admin.admin_index') }}" class="navbar-item">Admin Panel</a>
+                        <a href="{{ url_for('admin.users') }}" class="navbar-item">Admin Panel</a>
                     {% endif %}
                     <a href="{{ url_for('profile.profile_index') }}" class="navbar-item">Profile</a>
                     <a href="{{ url_for('profile.profile_settings') }}" class="navbar-item">Settings</a>
