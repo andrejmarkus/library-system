@@ -18,9 +18,12 @@
                             <img class="is-rounded" style="aspect-ratio: 1;" src="{{ url_for('profile.load_user_image', user_id=user.id, filename = user.profile_picture) }}" alt="{{ user.username }}-profile">
                         </figure>
                     {% endif %}
-                    <p>{{ user.username }}</p>s
+                    <p>{{ user.username }}</p>
                 </a>
                 <div class="navbar-dropdown">
+                    {% if user.role == "admin" %}
+                        <a href="{{ url_for('admin.admin_index') }}" class="navbar-item">Admin Panel</a>
+                    {% endif %}
                     <a href="{{ url_for('profile.profile_index') }}" class="navbar-item">Profile</a>
                     <a href="{{ url_for('profile.profile_settings') }}" class="navbar-item">Settings</a>
                     <div class="navbar-item">

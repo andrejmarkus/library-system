@@ -30,7 +30,7 @@
 
     <script>
         const getBookDetail{{ book.id }} = () => {
-            fetch(`detail/{{ book.id }}`, {
+            fetch("{{ url_for('general.detail_book', book_id = book.id) }}", {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/html'

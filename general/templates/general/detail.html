@@ -17,13 +17,13 @@
         <section class="section">
             <h3 class="title is-3">{{ book.title }}</h3>
             <h5 class="subtitle is-5 mt-0">{{ book.author }}</h5>
-            <div class="level">
-                <div class="level-left">
-                    <figure style="width: 35rem" class="image is-aspect-ratio-3by2">
+            <div class="columns">
+                <div class="column">
+                    <figure class="image is-aspect-ratio-3by2">
                         <img src="{{ url_for('general.load_book_image', book_id=book.id, filename=book.book_picture) }}">
                     </figure>
                 </div>
-                <div style="width: 35rem" class="level-right">
+                <div class="column">
                     <div class="content">
                         <p><b>Publisher:</b> {{ book.publisher }}</p>
                         <p><b>Year:</b> {{ book.year }}</p>

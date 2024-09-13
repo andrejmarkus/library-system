@@ -11,8 +11,13 @@
 </head>
 <body>
     {% include 'layout/navbar.html' %}
-    <section class="section">
-        {% block body %}{% endblock %}
-    </section>
+    <div class="columns is-fullheight">
+        <div class="column is-one-fifth">
+            {% include 'layout/admin-sidebar.html' %}
+        </div>
+        <section class="section column is-fullheight">
+            {% block body %}{% endblock %}
+        </section>
+    </div>
 </body>
 </html>
