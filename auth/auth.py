@@ -48,9 +48,13 @@ def signup_post():
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
 
-    user = User.objects(email=email).first()
+    user_username = User.objects(username=username).first()
+    if user_username:
+        flash('Username already exists')
+        return redirect(url_for('auth.signup'))
 
-    if user:
+    user_email = User.objects(email=email).first()
+    if user_email:
         flash('Email already registered')
         return redirect(url_for('auth.signup'))
 

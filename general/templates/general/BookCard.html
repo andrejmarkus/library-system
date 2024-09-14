@@ -4,7 +4,7 @@
             <figure class="image">
                 {% if book.book_picture %}
                     <figure id="book-image-{{ book.id }}" class="image is-clickable">
-                        <img class="is-aspect-ratio-2by3" src="{{ url_for('general.load_book_image', book_id=book.id, filename=book.book_picture) }}">
+                        <img class="is-aspect-ratio-2by3" src="{{ url_for('general.load_book_image', filename=book.book_picture) }}">
                     </figure>
                 {% endif %}
             </figure>
@@ -45,8 +45,4 @@
             getBookDetail{{ book.id }}()
         })
     </script>
-{% endmacro %}
-
-{% macro BookCardScript(book) %}
-
 {% endmacro %}

@@ -1,6 +1,6 @@
 import os
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, Response
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
@@ -38,17 +38,19 @@ def user_profile(user_id):
 
     return render_template('admin/user-profile.html', display_user=user, books=books)
 
-@admin.delete('/users/delete')
+@admin.delete('/users/delete/<user_id>')
 @login_required
 def delete_user(user_id):
     if current_user.role != 'admin':
         return redirect(url_for('general.index'))
 
-    user = User.objects(id=user_id)
+    user = User.objects(id=user_id).first()
+    os.remove(os.path.join(f'{current_app.config['UPLOAD_FOLDER']}users/', user.profile_picture))
+
     Book.objects(borrowing__user=user).update(unset__borrowing=True)
     user.delete()
 
-    return redirect(url_for('admin.users'))
+    return Response(status=200)
 
 @admin.post('/users/role/<user_id>')
 @login_required
@@ -87,7 +89,7 @@ def add_book():
     ).save()
 
     filename = secure_filename(f'{book.id}{file_extension(file.filename)}')
-    path = os.path.join(f'{current_app.config['UPLOAD_FOLDER']}books/{book.id}/', filename)
+    path = os.path.join(f'{current_app.config['UPLOAD_FOLDER']}books/', filename)
 
     os.makedirs(os.path.dirname(path), exist_ok=True)
     file.save(path)
@@ -102,5 +104,8 @@ def delete_book(book_id):
     if current_user.role != 'admin':
         return redirect(url_for('general.index'))
 
-    Book.objects(id=book_id).delete()
-    return redirect(url_for('admin.books'))
+    book = Book.objects(id=book_id).first()
+    os.remove(os.path.join(f'{current_app.config['UPLOAD_FOLDER']}books/', book.book_picture))
+
+    book.delete()
+    return Response(status=200)

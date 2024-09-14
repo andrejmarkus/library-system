@@ -6,7 +6,7 @@ class User(UserMixin, me.Document):
     username = me.StringField(max_length=50, required=True, unique=True)
     email = me.StringField(max_length=50, unique=True)
     password = me.StringField(max_length=256, required=True)
-    profile_picture = me.StringField(max_length=100)
+    profile_picture = me.StringField(max_length=100, default='default.jpg')
     role = me.StringField(max_length=50, default='user')
 
 
@@ -28,8 +28,8 @@ class Book(me.Document):
 
     meta = { 'indexes': [
         {
-            'fields': [ '$title', '$author' ],
+            'fields': [ '$title', '$author', '$publisher' ],
             'default_language': 'english',
-            'weights': { 'title': 2, 'author': 1 }
+            'weights': { 'title': 2, 'author': 1, 'publisher': 1 },
         },
     ] }

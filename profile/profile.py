@@ -29,12 +29,14 @@ def upload():
         flash('File not allowed', 'danger')
         return redirect(url_for('profile.edit_profile'))
     filename = secure_filename(f'{current_user.id}{file_extension(file.filename)}')
-    path = os.path.join(f'{current_app.config['UPLOAD_FOLDER']}users/{current_user.id}/', filename)
+    path = os.path.join(f'{current_app.config['UPLOAD_FOLDER']}users/', filename)
+
+    user = User.objects(id=current_user.id).first()
+    os.remove(os.path.join(f'{current_app.config['UPLOAD_FOLDER']}users/', user.profile_picture))
 
     os.makedirs(os.path.dirname(path), exist_ok=True)
     file.save(path)
-
-    User.objects(id=current_user.id).update(profile_picture=filename)
+    user.update(profile_picture=filename)
 
     return redirect(url_for('profile.profile_settings'))
 
@@ -64,7 +66,7 @@ def update_password():
     flash("Invalid password")
     return redirect(url_for('profile.profile_settings'))
 
-@profile.get('/load/<user_id>/<filename>')
-def load_user_image(user_id, filename):
-    return send_from_directory(f'{current_app.config['UPLOAD_FOLDER']}users/{user_id}/', filename)
+@profile.get('/load/<filename>')
+def load_user_image(filename):
+    return send_from_directory(f'{current_app.config['UPLOAD_FOLDER']}users/', filename)
 
