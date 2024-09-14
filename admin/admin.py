@@ -45,7 +45,9 @@ def delete_user(user_id):
         return redirect(url_for('general.index'))
 
     user = User.objects(id=user_id).first()
-    os.remove(os.path.join(f'{current_app.config['UPLOAD_FOLDER']}users/', user.profile_picture))
+
+    if user.profile_picture != 'default.jpg':
+        os.remove(os.path.join(f'{current_app.config['UPLOAD_FOLDER']}users/', user.profile_picture))
 
     Book.objects(borrowing__user=user).update(unset__borrowing=True)
     user.delete()

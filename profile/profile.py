@@ -32,7 +32,9 @@ def upload():
     path = os.path.join(f'{current_app.config['UPLOAD_FOLDER']}users/', filename)
 
     user = User.objects(id=current_user.id).first()
-    os.remove(os.path.join(f'{current_app.config['UPLOAD_FOLDER']}users/', user.profile_picture))
+
+    if user.profile_picture != 'default.jpg':
+        os.remove(os.path.join(f'{current_app.config['UPLOAD_FOLDER']}users/', user.profile_picture))
 
     os.makedirs(os.path.dirname(path), exist_ok=True)
     file.save(path)
