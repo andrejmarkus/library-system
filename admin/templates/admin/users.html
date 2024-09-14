@@ -13,7 +13,7 @@
     {% for user in users %}
         <div id="user-{{ user.id }}" class="box">
             <div class="is-flex is-justify-content-space-between is-align-items-center">
-                <div class="is-flex is-align-items-center is-gap-1">
+                <div id="user-avatar-{{ user.id }}" class="is-flex is-align-items-center is-gap-1 is-clickable">
                     {% if user.profile_picture %}
                         <figure class="image is-32x32">
                             <img class="is-rounded" style="aspect-ratio: 1;" src="{{ url_for('profile.load_user_image', user_id=user.id, filename = user.profile_picture) }}" alt="{{ user.username }}-profile">
@@ -46,6 +46,12 @@
                     },
                     body: JSON.stringify({ role: event.target.value })
                 })
+            })
+
+            document.getElementById("user-avatar-{{ user.id }}").addEventListener("click", (event) => {
+                fetch("{{ url_for("admin.user_profile", user_id = user.id) }}", {
+                    method: 'GET'
+                }).then(response => window.location.href = response.url)
             })
 
             document.getElementById("user-delete-{{ user.id }}").addEventListener("click", (event) => {

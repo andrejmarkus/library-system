@@ -21,7 +21,9 @@
             <input class="input" type="file" name="file">
         </div>
 
-        <img style="width: 10rem; aspect-ratio: 1;" src="{{ url_for('profile.load_user_image', user_id=user.id, filename = user.profile_picture) }}" alt="{{ user.username }}-profile">
+        {% if user.profile_picture %}
+            <img style="width: 10rem; aspect-ratio: 1;" src="{{ url_for('profile.load_user_image', user_id=user.id, filename = user.profile_picture) }}" alt="{{ user.username }}-profile">
+        {% endif %}
 
         <div class="field">
             <button class="button is-primary" type="submit" value="Upload">
@@ -29,6 +31,8 @@
             </button>
         </div>
     </form>
+
+    <hr>
 
     <form method="post" action="{{ url_for('profile.update_username') }}">
         <div class="field">
@@ -42,6 +46,8 @@
             </button>
         </div>
     </form>
+
+    <hr>
 
     <form method="post" action="{{ url_for('profile.update_password') }}">
         <div class="field">

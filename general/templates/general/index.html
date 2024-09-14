@@ -22,11 +22,13 @@
         </div>
     </form>
 
-    <div class="grid mt-4">
-        {% for book in books %}
-            <div class="cell" id="book-{{ book.id }}">
-                {% call BookCard(book) %}{% endcall %}
-            </div>
-        {% endfor %}
+    <div class="fixed-grid has-4-cols mt-4">
+        <div class="grid">
+            {% for book in books %}
+                <div class="cell is-grid is-fullheight" id="book-{{ book.id }}">
+                    {% call BookCard(book) %}{% endcall %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

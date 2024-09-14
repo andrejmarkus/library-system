@@ -14,24 +14,27 @@
         {% endif %}
     {% endwith %}
 
-    <div class="level">
-        <div class="level-left">
-            <div class="level-item" style="width: 7rem">
+    <div class="columns is-vcentered">
+        {% if user.profile_picture %}
+            <div class="column is-1">
                 <figure class="image is-square">
                     <img class="is-rounded" src="{{ url_for('profile.load_user_image', user_id=user.id, filename=user.profile_picture) }}" alt="{{ user.username }}-profile">
                 </figure>
             </div>
-            <p class="level-item title is-3">{{ user.username }}</p>
-        </div>
+        {% endif %}
+        <p class="column title is-3">{{ user.username }}</p>
     </div>
 
+    <hr>
     <h3 class="title is-3">Your current borrowings</h3>
 
-    <div class="grid mt-4">
-        {% for book in books %}
-            <div class="cell" id="book-{{ book.id }}">
-                {% call BookCard(book) %}{% endcall %}
-            </div>
-        {% endfor %}
+    <div class="fixed-grid has-4-cols mt-4">
+        <div class="grid">
+            {% for book in books %}
+                <div class="cell is-grid is-fullheight" id="book-{{ book.id }}">
+                    {% call BookCard(book) %}{% endcall %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

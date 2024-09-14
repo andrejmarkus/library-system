@@ -14,17 +14,18 @@
         {% endif %}
     {% endwith %}
 
-    <div class="level">
-        <div class="level-left">
-            <div class="level-item" style="width: 7rem">
+    <div class="columns is-vcentered">
+        {% if display_user.profile_picture %}
+            <div class="column is-1">
                 <figure class="image is-square">
                     <img class="is-rounded" src="{{ url_for('profile.load_user_image', user_id=display_user.id, filename=display_user.profile_picture) }}" alt="{{ display_user.username }}-profile">
                 </figure>
             </div>
-            <p class="level-item title is-3">{{ display_user.username }}</p>
-        </div>
+        {% endif %}
+        <p class="column title is-3">{{ display_user.username }}</p>
     </div>
 
+    <hr>
     <h3 class="title is-3">Your current borrowings</h3>
 
     <div class="fixed-grid has-4-cols mt-4">

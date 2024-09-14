@@ -127,20 +127,22 @@
 
     <h3 class="title is-3 mt-4">Manage books</h3>
 
-    <div class="grid mt-4">
-        {% for book in books %}
-            <div class="cell" id="book-{{ book.id }}">
-                {% call BookCard(book) %}
-                    {% if user.is_authenticated %}
-                        <div class="card-footer-item">
-                            <div class="field">
-                                <button id="book-delete-{{ book.id }}" class="button is-danger" onclick="deleteBook('{{ book.id }}')">Delete</button>
+    <div class="fixed-grid has-4-cols mt-4">
+        <div class="grid">
+            {% for book in books %}
+                <div class="cell is-grid is-fullheight" id="book-{{ book.id }}">
+                    {% call BookCard(book) %}
+                        {% if user.is_authenticated %}
+                            <div class="card-footer-item">
+                                <div class="field">
+                                    <button id="book-delete-{{ book.id }}" class="button is-danger" onclick="deleteBook('{{ book.id }}')">Delete</button>
+                                </div>
                             </div>
-                        </div>
-                    {% endif %}
-                {% endcall %}
-            </div>
-        {% endfor %}
+                        {% endif %}
+                    {% endcall %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
     <script>

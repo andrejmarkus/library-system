@@ -13,7 +13,7 @@ profile = Blueprint('profile', __name__, template_folder='templates', static_fol
 @profile.route('/')
 @login_required
 def profile_index():
-    books = Book.objects(borrowing__user_id=current_user.id)
+    books = Book.objects(borrowing__user=current_user)
     return render_template('profile/profile.html', books=books)
 
 @profile.route('/settings')
@@ -36,7 +36,7 @@ def upload():
 
     User.objects(id=current_user.id).update(profile_picture=filename)
 
-    return redirect(url_for('profile.profile-settings'))
+    return redirect(url_for('profile.profile_settings'))
 
 @profile.post('/update-username')
 @login_required
@@ -44,7 +44,7 @@ def update_username():
     username = request.form['username']
     User.objects(id=current_user.id).update(username=username)
 
-    return redirect(url_for('profile.profile-settings'))
+    return redirect(url_for('profile.profile_settings'))
 
 @profile.post('/update-password')
 @login_required
@@ -62,7 +62,7 @@ def update_password():
         return redirect(url_for('profile.profile-settings'))
 
     flash("Invalid password")
-    return redirect(url_for('profile.profile-settings'))
+    return redirect(url_for('profile.profile_settings'))
 
 @profile.get('/load/<user_id>/<filename>')
 def load_user_image(user_id, filename):

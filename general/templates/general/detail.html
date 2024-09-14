@@ -30,45 +30,73 @@
                         <p><b>Genre:</b> {{ book.genre }}</p>
                         <p><b>Description:</b><br> {{ book.description }}</p>
 
-                        {% if user.is_authenticated and user.role == "admin" %}
-                            <h4 class="title is-4">Book is available for borrowing</h4>
+                        {% if user.is_authenticated and user.role == "admin"  %}
+                            {% if book.borrowing is none %}
+                                <h4 class="title is-4">Book is available for borrowing</h4>
 
-                            <form method="post" action="{{ url_for("general.borrow", book_id=book.id) }}">
-                                <div class="field">
-                                    <label class="label" for="username">Username</label>
-                                    <div class="select">
-                                        <select name="user_id" required>
-                                            {% for user in users %}
-                                                <option value="{{ user.id }}">{{ user.username }}</option>
-                                            {% endfor %}
-                                        </select>
+                                <form method="post" action="{{ url_for("general.borrow", book_id=book.id) }}">
+                                    <div class="field">
+                                        <label class="label" for="username">Username</label>
+                                        <div class="select">
+                                            <select name="user_id" required>
+                                                {% for user in users %}
+                                                    <option value="{{ user.id }}">{{ user.username }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="field">
-                                    <label class="label" for="from_date">From</label>
-                                    <div class="control">
-                                        <input class="input" type="date" name="from_date">
+                                    <div class="field">
+                                        <label class="label" for="from_date">From</label>
+                                        <div class="control">
+                                            <input class="input" type="date" name="from_date">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="field">
-                                    <label class="label" for="to_date">From</label>
-                                    <div class="control">
-                                        <input class="input" type="date" name="to_date">
+                                    <div class="field">
+                                        <label class="label" for="to_date">From</label>
+                                        <div class="control">
+                                            <input class="input" type="date" name="to_date">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="field">
-                                    <div class="control">
-                                        <button class="button is-primary" type="submit">Borrow</button>
+                                    <div class="field">
+                                        <div class="control">
+                                            <button class="button is-primary" type="submit">Borrow</button>
+                                        </div>
                                     </div>
+                                </form>
+                            {% else %}
+                                <h4 class="title is-4">Book is borrowed by</h4>
+
+                                <div id="user-borrowing" class="columns is-vcentered is-clickable">
+                                    {% if user_borrowing.profile_picture %}
+                                        <div class="column is-1">
+                                            <figure class="image is-square">
+                                                <img class="is-rounded" src="{{ url_for('profile.load_user_image', user_id=user_borrowing.id, filename=user_borrowing.profile_picture) }}" alt="{{ user_borrowing.username }}-profile">
+                                            </figure>
+                                        </div>
+                                    {% endif %}
+                                    <p class="column title is-3">{{ user_borrowing.username }}</p>
                                 </div>
-                            </form>
+                                <form method="post" action="{{ url_for('general.borrow_return', user_id=user_borrowing.id, book_id=book.id) }}">
+                                    <div class="field">
+                                        <button class="button is-primary" type="submit">Return</button>
+                                    </div>
+                                </form>
+                            {% endif %}
                         {% endif %}
                     </div>
                 </div>
             </div>
         </section>
     </div>
+
+    <script>
+        document.getElementById("user-borrowing").addEventListener("click", (event) => {
+            fetch("{{ url_for("admin.user_profile", user_id = user_borrowing.id) }}", {
+                method: "GET"
+            }).then(response => window.location.href = response.url)
+        })
+    </script>
 {% endblock %}

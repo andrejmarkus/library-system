@@ -1,26 +1,24 @@
 {% macro BookCard(book) %}
     <div id="book-{{ book.id }}" class="card">
-        <header id="book-header-{{ book.id }}" class="card-header is-clickable">
-            <div class="card-header-title">
-                <div class="content">
-                    <p class="title is-5">{{ book.title }}</p>
-                    <p class="subtitle is-6 mt-0">
-                        by {{ book.author }}
-                        <br>
-                        {{ book.genre }}
-                    </p>
-                </div>
-            </div>
-        </header>
-
         <div class="card-image">
             <figure class="image">
                 {% if book.book_picture %}
                     <figure id="book-image-{{ book.id }}" class="image is-clickable">
-                        <img src="{{ url_for('general.load_book_image', book_id=book.id, filename=book.book_picture) }}">
+                        <img class="is-aspect-ratio-2by3" src="{{ url_for('general.load_book_image', book_id=book.id, filename=book.book_picture) }}">
                     </figure>
                 {% endif %}
             </figure>
+        </div>
+
+        <div style="height: 100%" id="book-content-{{ book.id }}" class="card-content is-clickable">
+            <div class="content">
+                <p class="title is-5">{{ book.title }}</p>
+                <p class="subtitle is-6 mt-0">
+                    by {{ book.author }}
+                    <br>
+                    {{ book.genre }}
+                </p>
+            </div>
         </div>
 
         <footer class="card-footer">
@@ -39,7 +37,7 @@
             }).then(response => window.location.href = response.url)
         }
 
-        document.getElementById("book-header-{{ book.id }}").addEventListener("click", (event) => {
+        document.getElementById("book-content-{{ book.id }}").addEventListener("click", (event) => {
             getBookDetail{{ book.id }}()
         })
 
