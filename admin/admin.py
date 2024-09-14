@@ -44,7 +44,10 @@ def delete_user(user_id):
     if current_user.role != 'admin':
         return redirect(url_for('general.index'))
 
-    User.objects(id=user_id).delete()
+    user = User.objects(id=user_id)
+    Book.objects(borrowing__user=user).update(unset__borrowing=True)
+    user.delete()
+
     return redirect(url_for('admin.users'))
 
 @admin.post('/users/role/<user_id>')

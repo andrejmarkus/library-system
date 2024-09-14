@@ -9,7 +9,7 @@ general = Blueprint('general', __name__, template_folder='templates', static_fol
 
 @general.route('/')
 def index():
-    books = Book.objects(borrowing__exists=False)
+    books = Book.objects(borrowing__exists=False).order_by("+author", "+title")
     return render_template('general/index.html', books=books)
 
 @general.get('/search')
