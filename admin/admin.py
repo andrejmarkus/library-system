@@ -24,7 +24,7 @@ def books():
     if current_user.role != 'admin':
         return redirect(url_for('general.index'))
 
-    books = Book.objects()
+    books = Book.objects().order_by("+author", "+title")
     return render_template('admin/books.html', books=books)
 
 @admin.route('/profile/<user_id>')
@@ -34,7 +34,7 @@ def user_profile(user_id):
         return redirect(url_for('general.index'))
 
     user = User.objects(id=user_id).first()
-    books = Book.objects(borrowing__user=user)
+    books = Book.objects(borrowing__user=user).order_by("+author", "+title")
 
     return render_template('admin/user-profile.html', display_user=user, books=books)
 

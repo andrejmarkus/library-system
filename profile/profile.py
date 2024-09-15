@@ -13,7 +13,7 @@ profile = Blueprint('profile', __name__, template_folder='templates', static_fol
 @profile.route('/')
 @login_required
 def profile_index():
-    books = Book.objects(borrowing__user=current_user)
+    books = Book.objects(borrowing__user=current_user).order_by("+author", "+title")
     return render_template('profile/profile.html', books=books)
 
 @profile.route('/settings')
@@ -27,7 +27,7 @@ def upload():
     file = request.files['file']
     if not is_file_allowed(file.filename):
         flash('File not allowed', 'danger')
-        return redirect(url_for('profile.edit_profile'))
+        return redirect(url_for('profile.profile_settings'))
     filename = secure_filename(f'{current_user.id}{file_extension(file.filename)}')
     path = os.path.join(f'{current_app.config['UPLOAD_FOLDER']}users/', filename)
 

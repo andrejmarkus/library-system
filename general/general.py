@@ -1,8 +1,5 @@
-from typing import Optional
-
-from flask import render_template, Blueprint, request, send_from_directory, current_app, redirect, url_for, jsonify
+from flask import render_template, Blueprint, request, send_from_directory, current_app, redirect, url_for
 from flask_login import login_required, current_user
-from jinja2.utils import consume
 
 from models import Book, Borrowing, User
 
@@ -15,7 +12,7 @@ def index():
 
 @general.get('/search')
 def search():
-    books = Book.objects().search_text(request.args['query']).order_by('$text_score')
+    books = Book.objects(borrowing__exists=False).search_text(request.args['query']).order_by('$text_score')
     return render_template('general/index.html', books=books)
 
 @general.get('/load/<filename>')
