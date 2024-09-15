@@ -12,8 +12,6 @@ class User(UserMixin, me.Document):
 
 class Borrowing(me.EmbeddedDocument):
     user = me.ReferenceField(User)
-    from_date = me.DateTimeField()
-    to_date = me.DateTimeField()
 
 
 class Book(me.Document):

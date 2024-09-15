@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
-from models import Book, User
+from models import Book, User, Borrowing
 from utils import is_file_allowed, file_extension
 
 admin = Blueprint('admin', __name__, template_folder='templates', static_folder='static')
@@ -111,3 +111,17 @@ def delete_book(book_id):
 
     book.delete()
     return Response(status=200)
+
+@admin.post('/books/borrow/<book_id>')
+@login_required
+def borrow(book_id):
+    if current_user.role != 'admin':
+        return redirect(url_for('general.index'))
+
+    user_id = request.form['user_id']
+
+    user = User.objects(id=user_id).first()
+    borrowing = Borrowing(user=user)
+    Book.objects(id=book_id).update(borrowing=borrowing)
+
+    return redirect(url_for('admin.user_profile', user_id=user.id))

@@ -27,22 +27,6 @@ def detail_book(book_id):
 
     return render_template('general/detail.html', book=book, users=users, user_borrowing=user_borrowing)
 
-@general.post('/borrow/<book_id>')
-@login_required
-def borrow(book_id):
-    if current_user.role != 'admin':
-        return redirect(url_for('general.index'))
-
-    user_id = request.form['user_id']
-    from_date = request.form['from_date']
-    to_date = request.form['to_date']
-
-    user = User.objects(id=user_id).first()
-    borrowing = Borrowing(user=user, from_date=from_date, to_date=to_date)
-    Book.objects(id=book_id).update(borrowing=borrowing)
-
-    return redirect(url_for('admin.user_profile', user_id=user.id))
-
 @general.post('/return/<user_id>/<book_id>')
 @login_required
 def borrow_return(user_id, book_id):
