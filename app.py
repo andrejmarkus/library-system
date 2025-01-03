@@ -28,7 +28,6 @@ app.config['MONGODB_SETTINGS'] = {
 
 # FLASK SETTINGS
 app.config['SECRET_KEY'] = config['FLASK_SETTINGS']['FLASK_SECRET_KEY']
-app.config['UPLOAD_FOLDER'] = config['FLASK_SETTINGS']['FLASK_UPLOAD_FOLDER']
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'

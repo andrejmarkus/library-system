@@ -1,7 +1,9 @@
-from flask import render_template, Blueprint, request, send_from_directory, current_app, redirect, url_for
+from io import BytesIO
+
+from flask import render_template, Blueprint, request, current_app, redirect, url_for, send_file
 from flask_login import login_required, current_user
 
-from models import Book, Borrowing, User
+from models import Book, User
 
 general = Blueprint('general', __name__, template_folder='templates', static_folder='static')
 
@@ -15,9 +17,12 @@ def search():
     books = Book.objects(borrowing__exists=False).search_text(request.args['query']).order_by('$text_score')
     return render_template('general/index.html', books=books)
 
-@general.get('/load/<filename>')
-def load_book_image(filename):
-    return send_from_directory(f'{current_app.config['UPLOAD_FOLDER']}books/', filename)
+@general.get('/load/<book_id>')
+def load_book_image(book_id):
+    book = Book.objects(id=book_id).first()
+    file_data = book.book_picture.read()
+    content_type = book.book_picture.content_type
+    return send_file(BytesIO(file_data), mimetype=content_type, as_attachment=False)
 
 @general.get('/detail/<book_id>')
 def detail_book(book_id):

@@ -16,7 +16,7 @@
                 <div id="user-avatar-{{ user.id }}" class="is-flex is-align-items-center is-gap-1 is-clickable">
                     {% if user.profile_picture %}
                         <figure class="image is-32x32">
-                            <img class="is-rounded" style="aspect-ratio: 1;" src="{{ url_for('profile.load_user_image', filename = user.profile_picture) }}" alt="{{ user.username }}-profile">
+                            <img class="is-rounded" style="aspect-ratio: 1;" src="{{ url_for('profile.load_user_image', user_id = user.id) }}" alt="{{ user.username }}-profile">
                         </figure>
                     {% endif %}
                     <p>{{ user.username }}</p>

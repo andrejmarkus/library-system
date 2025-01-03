@@ -18,7 +18,7 @@
         {% if display_user.profile_picture %}
             <div class="column is-1">
                 <figure class="image is-square">
-                    <img class="is-rounded" src="{{ url_for('profile.load_user_image', filename=display_user.profile_picture) }}" alt="{{ display_user.username }}-profile">
+                    <img class="is-rounded" src="{{ url_for('profile.load_user_image', user_id=display_user.id) }}" alt="{{ display_user.username }}-profile">
                 </figure>
             </div>
         {% endif %}

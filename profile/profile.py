@@ -1,12 +1,10 @@
-import os
-
 import bcrypt
-from flask import Blueprint, request, render_template, flash, redirect, url_for, send_from_directory, current_app
+from flask import Blueprint, request, render_template, flash, redirect, url_for, send_file
 from flask_login import login_required, current_user
-from werkzeug.utils import secure_filename
+from io import BytesIO
 
 from models import User, Book
-from utils import is_file_allowed, file_extension
+from utils import is_file_allowed
 
 profile = Blueprint('profile', __name__, template_folder='templates', static_folder='static')
 
@@ -28,17 +26,10 @@ def upload():
     if not is_file_allowed(file.filename):
         flash('File not allowed', 'danger')
         return redirect(url_for('profile.profile_settings'))
-    filename = secure_filename(f'{current_user.id}{file_extension(file.filename)}')
-    path = os.path.join(f'{current_app.config['UPLOAD_FOLDER']}users/', filename)
 
     user = User.objects(id=current_user.id).first()
-
-    if user.profile_picture != 'default.jpg':
-        os.remove(os.path.join(f'{current_app.config['UPLOAD_FOLDER']}users/', user.profile_picture))
-
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    file.save(path)
-    user.update(profile_picture=filename)
+    user.profile_picture.replace(file, content_type=file.content_type)
+    user.save()
 
     return redirect(url_for('profile.profile_settings'))
 
@@ -68,7 +59,10 @@ def update_password():
     flash("Invalid password")
     return redirect(url_for('profile.profile_settings'))
 
-@profile.get('/load/<filename>')
-def load_user_image(filename):
-    return send_from_directory(f'{current_app.config['UPLOAD_FOLDER']}users/', filename)
+@profile.get('/load/<user_id>')
+def load_user_image(user_id):
+    user = User.objects(id=user_id).first()
+    file_data = user.profile_picture.read()
+    content_type = user.profile_picture.content_type
+    return send_file(BytesIO(file_data), mimetype=content_type, as_attachment=False)
 

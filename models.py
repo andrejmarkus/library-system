@@ -6,7 +6,7 @@ class User(UserMixin, me.Document):
     username = me.StringField(max_length=50, required=True, unique=True)
     email = me.StringField(max_length=50, unique=True)
     password = me.StringField(max_length=256, required=True)
-    profile_picture = me.StringField(max_length=100, default='default.jpg')
+    profile_picture = me.FileField()
     role = me.StringField(max_length=50, default='user')
 
 
@@ -22,7 +22,7 @@ class Book(me.Document):
     description = me.StringField()
     genre = me.StringField(max_length=50, required=True)
     borrowing = me.EmbeddedDocumentField(Borrowing, default=None)
-    book_picture = me.StringField(max_length=100)
+    book_picture = me.FileField()
 
     meta = { 'indexes': [
         {

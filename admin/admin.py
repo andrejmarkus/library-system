@@ -2,10 +2,9 @@ import os
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, Response
 from flask_login import login_required, current_user
-from werkzeug.utils import secure_filename
 
 from models import Book, User, Borrowing
-from utils import is_file_allowed, file_extension
+from utils import is_file_allowed
 
 admin = Blueprint('admin', __name__, template_folder='templates', static_folder='static')
 
@@ -88,15 +87,10 @@ def add_book():
         year=request.form['year'],
         genre=request.form['genre'],
         description=request.form['description']
-    ).save()
+    )
 
-    filename = secure_filename(f'{book.id}{file_extension(file.filename)}')
-    path = os.path.join(f'{current_app.config['UPLOAD_FOLDER']}books/', filename)
-
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    file.save(path)
-
-    book.update(book_picture=filename)
+    book.book_picture.put(file, content_type=file.content_type)
+    book.save()
 
     return redirect(url_for('admin.books'))
 
@@ -107,9 +101,8 @@ def delete_book(book_id):
         return redirect(url_for('general.index'))
 
     book = Book.objects(id=book_id).first()
-    os.remove(os.path.join(f'{current_app.config['UPLOAD_FOLDER']}books/', book.book_picture))
-
     book.delete()
+
     return Response(status=200)
 
 @admin.post('/books/borrow/<book_id>')

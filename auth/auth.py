@@ -1,5 +1,3 @@
-from cgitb import reset
-
 import bcrypt
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user
@@ -58,7 +56,10 @@ def signup_post():
         flash('Email already registered')
         return redirect(url_for('auth.signup'))
 
+    file = open("static/default.jpg", "rb")
+
     new_user = User(email=email, username=username, password=hashed_password)
+    new_user.profile_picture.put(file, content_type="image/jpg")
     new_user.save()
 
     return redirect(url_for('auth.login'))
