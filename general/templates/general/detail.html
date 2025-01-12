@@ -34,7 +34,7 @@
                             {% if book.borrowing is none %}
                                 <h4 class="title is-4">Book is available for borrowing</h4>
 
-                                <form method="post" action="{{ url_for("general.borrow", book_id=book.id) }}">
+                                <form method="post" action="{{ url_for("admin.borrow", book_id=book.id) }}">
                                     <div class="field">
                                         <label class="label" for="username">Username</label>
                                         <div class="select">

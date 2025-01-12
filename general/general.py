@@ -14,7 +14,14 @@ def index():
 
 @general.get('/search')
 def search():
-    books = Book.objects(borrowing__exists=False).search_text(request.args['query']).order_by('$text_score')
+    books = Book.objects(borrowing__exists=False).order_by("+author", "+title")
+    query = request.args['query'].lower()
+    books = [
+        book for book in books
+        if query in book.title.lower()
+        or query in book.author.lower()
+        or query in book.publisher.lower()
+    ]
     return render_template('general/index.html', books=books)
 
 @general.get('/load/<book_id>')
